@@ -1,0 +1,27 @@
+FROM ubuntu:latest
+
+
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
+
+RUN apt-get update && \
+    apt-get install -y python3.10 && \
+    apt-get install -y python3.10-venv
+
+RUN apt-get -y install python3-pip
+# RUN apt-get -y install python-distutils-extras
+
+RUN python3.10 -m venv venv
+
+COPY ./ .
+ENV TZ UTC
+#RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN . /venv/bin/activate && pip install -r /requirements.txt
+CMD . /venv/bin/activate
+# RUN . /venv/bin/activate && python3.10 main.py
